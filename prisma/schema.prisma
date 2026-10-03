@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id                 String   @id @default(uuid())
+  name               String
+  phone              String   @unique
+  email              String?
+  requirement        String
+  location           String?
+  budget             String?
+  source             String?
+  upload_date        DateTime?
+  status             String   @default("new") // new, queued, sent, delivered, read, replied, failed, invalid
+  message_id         String?
+  error_log          String?
+  priority           String   @default("Yellow") // Green (Hot), Yellow (Follow-up), Red (Dead)
+  raw_data           String?  // Store original row as JSON string
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+}
+
+model MappingConfig {
+  id                 String   @id @default(uuid())
+  user_id            String   @default("admin")
+  mapping            String   // Stored as JSON string
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+}
